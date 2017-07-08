@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/slowfrog/stephen/display"
+	"github.com/slowfrog/stephen/model"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -11,7 +12,9 @@ func main() {
 	var event sdl.Event
 	var err error
 	var running bool
-	
+
+	b := model.Board{5, 5, nil}
+	fmt.Printf("Board: %s\n", b)
 	/*err = sdl.Init(sdl.INIT_EVERYTHING)
 	if err != nil {
 		panic(err)
