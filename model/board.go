@@ -41,6 +41,20 @@ func CreateBoard(width, height uint8) (b Board) {
 	return
 }
 
+func (b *Board) Width() uint8 {
+	return b.width
+}
+
+func (b *Board) Height() uint8 {
+	return b.height
+}
+
+func (b *Board) Size() (w, h uint8) {
+	w = b.width
+	h = b.height
+	return
+}
+
 func (b *Board) index(x, y uint8) uint8 {
 	return b.width * y + x
 }

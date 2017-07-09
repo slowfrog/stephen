@@ -16,7 +16,8 @@ func main() {
 	var err error
 	var running bool
 
-	b := model.CreateBoard(5, 5)
+	b := model.CreateBoard(6, 4)
+	b.Set(1, 0, model.GROUND).Set(3, 2, model.GRILL).Set(5, 3, model.GROUND)
 	fmt.Printf("Board: %s\n", b)
 	/*err = sdl.Init(sdl.INIT_EVERYTHING)
 	if err != nil {
@@ -42,13 +43,16 @@ func main() {
 	var dx, dy int32
 	dx, dy = 1, 1
 
-	renderFigure(ds.Renderer(), points, &dx, &dy)
+	renderFigure(ds, points, &dx, &dy)
 	
 	//window.UpdateSurface()
-
+	
 	running = true
 	for running {
-		renderFigure(ds.Renderer(), points, &dx, &dy)
+		ds.Clear(GRAY)
+		renderBoard(ds, &b)
+		renderFigure(ds, points, &dx, &dy)
+		ds.Present()
 		for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 			switch t := event.(type) {
 			case *sdl.QuitEvent:
@@ -66,19 +70,39 @@ func main() {
 	}
 }
 
-func renderFigure(renderer *sdl.Renderer, points []sdl.Point, dx *int32, dy *int32) {
-	err := renderer.SetDrawColor(0, 0, 0, 255)
-	if err != nil {
-		panic(err)
-	}
+var BLACK = display.Rgb(0, 0, 0)
+var GRAY = display.Rgb(128, 128, 128)
+var ORANGE = display.Rgb(255, 128, 0)
+var GREEN = display.Rgb(0, 255, 0)
+var BLUE = display.Rgb(0, 0, 255)
+var YELLOW = display.Rgb(255, 255, 0)
+var RED = display.Rgb(255, 0, 0)
 
-	renderer.Clear()
-	
-	err = renderer.SetDrawColor(255, 128, 0, 255)
-	if err != nil {
-		panic(err)
+func renderBoard(ds *display.State, b *model.Board) {
+	w := int8(b.Width())
+	h := int8(b.Height())
+	rect := sdl.Rect{W:50, H:50}
+	var x, y int8
+	for x = 0; x < w; x++ {
+		rect.X = int32(x) * 50 + 10
+		for y = 0; y < h; y++ {
+			rect.Y = int32(y) * 50 + 10
+			c := b.Get(x, y)
+			col := BLACK
+			if c == model.GROUND {
+				col = GREEN
+			} else if c == model.GRILL {
+				col = ORANGE
+			}
+			err := ds.FillRect(&rect, col)
+			if err != nil {
+				panic(err)
+			}
+		}
 	}
+}
 
+func renderFigure(ds *display.State, points []sdl.Point, dx *int32, dy *int32) {
 	points[2].X += *dx
 	points[2].Y += *dy
 
@@ -93,10 +117,14 @@ func renderFigure(renderer *sdl.Renderer, points []sdl.Point, dx *int32, dy *int
 		*dy = 1
 	}
 	
-	err = renderer.DrawLines(points)
+	err := ds.DrawLines(points, YELLOW)
 	if err != nil {
 		panic(err)
 	}
 
-	renderer.Present()
+	r := sdl.Rect{points[2].X - 10, points[2].Y - 10, 20, 20}
+	err = ds.FillRect(&r, RED)
+	if err != nil {
+		panic(err)
+	}
 }
