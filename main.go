@@ -8,12 +8,15 @@ import (
 	"github.com/veandco/go-sdl2/sdl"
 )
 
+const W int32 = 400
+const H int32 = 400
+
 func main() {
 	var event sdl.Event
 	var err error
 	var running bool
 
-	b := model.Board{5, 5, nil}
+	b := model.CreateBoard(5, 5)
 	fmt.Printf("Board: %s\n", b)
 	/*err = sdl.Init(sdl.INIT_EVERYTHING)
 	if err != nil {
@@ -23,18 +26,11 @@ func main() {
 
 	window, err := sdl.CreateWindow("The Test", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
 		800, 600, sdl.WINDOW_SHOWN)*/
-	window, err := display.InitSdl()
+	ds, err := display.InitState(W, H)
 	if err != nil {
 		panic(err)
 	}
-	defer sdl.Quit()
-	defer window.Destroy()
-
-	renderer, err := sdl.CreateRenderer(window, -1, 0)
-	if err != nil {
-		panic(err)
-	}
-	defer renderer.Destroy()
+	defer ds.Destroy()
 	
 	points := make([]sdl.Point, 5)
 	points[0] = sdl.Point{10, 10}
@@ -46,13 +42,13 @@ func main() {
 	var dx, dy int32
 	dx, dy = 1, 1
 
-	renderFigure(renderer, points, &dx, &dy)
+	renderFigure(ds.Renderer(), points, &dx, &dy)
 	
-	window.UpdateSurface()
+	//window.UpdateSurface()
 
 	running = true
 	for running {
-		renderFigure(renderer, points, &dx, &dy)
+		renderFigure(ds.Renderer(), points, &dx, &dy)
 		for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 			switch t := event.(type) {
 			case *sdl.QuitEvent:
@@ -86,12 +82,12 @@ func renderFigure(renderer *sdl.Renderer, points []sdl.Point, dx *int32, dy *int
 	points[2].X += *dx
 	points[2].Y += *dy
 
-	if points[2].X >= 800 {
+	if points[2].X >= W {
 		*dx = -1
 	} else if points[2].X <= 0 {
 		*dx = 1
 	}
-	if points[2].Y >= 600 {
+	if points[2].Y >= H {
 		*dy = -1
 	} else if points[2].Y <= 0 {
 		*dy = 1
