@@ -22,11 +22,11 @@ func (a alignment) Name() string {
 type Sausage struct {
 	Alignment alignment
 	// Left-most (min) x of the sausage
-	X         int8
+	X int8
 	// Top-most (min) y of the sausage
-	Y         int8
+	Y int8
 	// Baking count: X,Y-bottom, other-bottom, X,Y-top, other top
-	Cooked    [4]uint8
+	Cooked [4]uint8
 }
 
 // Returns a 1-char string representing the cooking state of a sausage part

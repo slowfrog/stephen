@@ -122,7 +122,6 @@ func (s *State) DrawLines(points []sdl.Point, c Color) (err error) {
 	return
 }
 
-func (s *State) Present(){
+func (s *State) Present() {
 	s.r.Present()
 }
-

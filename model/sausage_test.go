@@ -18,7 +18,7 @@ func TestSausageToString(t *testing.T) {
 	s.Cook(1).Cook(3).Cook(3).Cook(3)
 	const exp string = "(5,4-horizontal-[.x][.#])"
 	str := s.ToString()
-	
+
 	if str != exp {
 		t.Errorf("Wrong ToString, expected %s but was %s\n", exp, str)
 	}

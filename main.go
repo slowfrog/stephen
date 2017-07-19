@@ -32,7 +32,7 @@ func main() {
 		panic(err)
 	}
 	defer ds.Destroy()
-	
+
 	points := make([]sdl.Point, 5)
 	points[0] = sdl.Point{10, 10}
 	points[1] = sdl.Point{100, 10}
@@ -44,9 +44,9 @@ func main() {
 	dx, dy = 1, 1
 
 	renderFigure(ds, points, &dx, &dy)
-	
+
 	//window.UpdateSurface()
-	
+
 	running = true
 	for running {
 		ds.Clear(GRAY)
@@ -62,7 +62,7 @@ func main() {
 				if (*kev).Keysym.Sym == sdl.K_ESCAPE {
 					running = false
 				}
-				if sdl.GetModState() & sdl.KMOD_CTRL != 0 {
+				if sdl.GetModState()&sdl.KMOD_CTRL != 0 {
 					fmt.Printf("WITH CTRL")
 				}
 			default:
@@ -84,12 +84,12 @@ var RED = display.Rgb(255, 0, 0)
 func renderBoard(ds *display.State, b *model.Board) {
 	w := int8(b.Width())
 	h := int8(b.Height())
-	rect := sdl.Rect{W:50, H:50}
+	rect := sdl.Rect{W: 50, H: 50}
 	var x, y int8
 	for x = 0; x < w; x++ {
-		rect.X = int32(x) * 50 + 10
+		rect.X = int32(x)*50 + 10
 		for y = 0; y < h; y++ {
-			rect.Y = int32(y) * 50 + 10
+			rect.Y = int32(y)*50 + 10
 			c := b.Get(x, y)
 			col := BLACK
 			if c == model.GROUND {
@@ -119,7 +119,7 @@ func renderFigure(ds *display.State, points []sdl.Point, dx *int32, dy *int32) {
 	} else if points[2].Y <= 0 {
 		*dy = 1
 	}
-	
+
 	err := ds.DrawLines(points, YELLOW)
 	if err != nil {
 		panic(err)
