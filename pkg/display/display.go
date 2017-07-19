@@ -56,6 +56,9 @@ func InitState(width, height int32) (s *State, err error) {
 		s.Destroy()
 		return
 	}
+
+	s.r.SetDrawBlendMode(sdl.BLENDMODE_BLEND)
+
 	return
 }
 

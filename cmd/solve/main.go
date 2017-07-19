@@ -18,7 +18,14 @@ func main() {
 
 	b := model.CreateBoard(6, 4)
 	b.Set(1, 0, model.GROUND).Set(3, 2, model.GRILL).Set(5, 3, model.GROUND)
-	fmt.Printf("Board: %s\n", b)
+	fmt.Printf("%#v\n", b)
+
+	s := make([]model.Sausage, 2)
+	s[0].Alignment = model.HORIZONTAL
+	s[1].X = 3
+	s[1].Y = 1
+	w := model.NewWorld(b, s)
+
 	/*err = sdl.Init(sdl.INIT_EVERYTHING)
 	if err != nil {
 		panic(err)
@@ -40,21 +47,13 @@ func main() {
 	points[3] = sdl.Point{150, 150}
 	points[4] = sdl.Point{10, 10}
 
-	var dx, dy int32
-	dx, dy = 1, 1
-
-	renderFigure(ds, points, &dx, &dy)
-
-	//window.UpdateSurface()
-
 	running = true
 	for running {
 		ds.Clear(GRAY)
-		renderBoard(ds, &b)
-		renderFigure(ds, points, &dx, &dy)
+		renderWorld(ds, w)
 		ds.Present()
 		for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
-			switch t := event.(type) {
+			switch event.(type) {
 			case *sdl.QuitEvent:
 				running = false
 			case *sdl.KeyDownEvent:
@@ -65,8 +64,6 @@ func main() {
 				if sdl.GetModState()&sdl.KMOD_CTRL != 0 {
 					fmt.Printf("WITH CTRL")
 				}
-			default:
-				fmt.Printf("%#v\n", t)
 			}
 		}
 		sdl.Delay(5)
@@ -81,15 +78,32 @@ var BLUE = display.Rgb(0, 0, 255)
 var YELLOW = display.Rgb(255, 255, 0)
 var RED = display.Rgb(255, 0, 0)
 
+var TRANS_ORANGE = display.Rgba(255, 128, 0, 128)
+var TRANS_RED = display.Rgba(255, 0, 0, 128)
+
+const (
+	OX = 10
+	OY = 10
+	CW = 50
+	CH = 50
+)
+
+func renderWorld(ds *display.State, w *model.World) {
+	renderBoard(ds, w.Board())
+	for _, s := range w.Sausages() {
+		renderSausage(ds, &s)
+	}
+}
+
 func renderBoard(ds *display.State, b *model.Board) {
 	w := int8(b.Width())
 	h := int8(b.Height())
-	rect := sdl.Rect{W: 50, H: 50}
+	rect := sdl.Rect{W: CW, H: CH}
 	var x, y int8
 	for x = 0; x < w; x++ {
-		rect.X = int32(x)*50 + 10
+		rect.X = int32(x)*CW + OX
 		for y = 0; y < h; y++ {
-			rect.Y = int32(y)*50 + 10
+			rect.Y = int32(y)*CH + OY
 			c := b.Get(x, y)
 			col := BLACK
 			if c == model.GROUND {
@@ -103,6 +117,24 @@ func renderBoard(ds *display.State, b *model.Board) {
 			}
 		}
 	}
+}
+
+const (
+	SOX = 5
+	SOY = 5
+	SW  = CW - 2*SOX
+	SH  = CH - 2*SOY
+)
+
+func renderSausage(ds *display.State, s *model.Sausage) {
+	var sw, sh int32
+	if s.Alignment == model.HORIZONTAL {
+		sw, sh = (CW-SOX)*2, CH-SOY*2
+	} else {
+		sw, sh = CW-SOX*2, (CH-SOY)*2
+	}
+	rect := sdl.Rect{X: int32(s.X)*CW + OX + SOX, Y: int32(s.Y)*CH + OY + SOY, W: sw, H: sh}
+	ds.FillRect(&rect, TRANS_RED)
 }
 
 func renderFigure(ds *display.State, points []sdl.Point, dx *int32, dy *int32) {
