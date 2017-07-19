@@ -62,8 +62,11 @@ func main() {
 				if (*kev).Keysym.Sym == sdl.K_ESCAPE {
 					running = false
 				}
+				if sdl.GetModState() & sdl.KMOD_CTRL != 0 {
+					fmt.Printf("WITH CTRL")
+				}
 			default:
-				fmt.Printf("Ev %s\n", t)
+				fmt.Printf("Ev %v\n", t)
 			}
 		}
 		sdl.Delay(5)

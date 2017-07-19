@@ -34,7 +34,7 @@ type Board struct {
 func CreateBoard(width, height uint8) (b Board) {
 	b.width = width
 	b.height = height
-	b.cell = make([]cell, b.width * b.height)
+	b.cell = make([]cell, b.width*b.height)
 	for i := range b.cell {
 		b.cell[i] = EMPTY
 	}
@@ -56,7 +56,7 @@ func (b *Board) Size() (w, h uint8) {
 }
 
 func (b *Board) index(x, y uint8) uint8 {
-	return b.width * y + x
+	return b.width*y + x
 }
 
 // Sets a value at a given position

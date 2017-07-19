@@ -10,11 +10,12 @@ func TestCellName(t *testing.T) {
 		{EMPTY, "empty"},
 		{GROUND, "ground"},
 		{GRILL, "grill"},
+		{5, "WAT?"},
 	}
 
 	for _, tt := range cases {
 		if tt.c.Name() != tt.s {
-			t.Errorf("EMPTY name should be 'empty', was '%d'", tt.c.Name())
+			t.Errorf("Cell name should be '%s', was '%s'", tt.s, tt.c.Name())
 		}
 	}
 }
@@ -22,7 +23,7 @@ func TestCellName(t *testing.T) {
 func TestCreateGetSetBoard(t *testing.T) {
 	var cases = []struct {
 		x, y int8
-		c cell
+		c    cell
 	}{
 		{0, 0, GROUND},
 		{1, 0, EMPTY},
@@ -41,8 +42,23 @@ func TestCreateGetSetBoard(t *testing.T) {
 	}
 }
 
+func TestBoardSize(t *testing.T) {
+	const W, H uint8 = 5, 12
+	b := CreateBoard(W, H)
+	if b.Width() != W {
+		t.Errorf("Wrong width, expected %d, was %d\n", W, b.Width())
+	}
+	if b.Height() != H {
+		t.Errorf("Wrong height, expected %d, was %d\n", H, b.Height())
+	}
+	w, h := b.Size()
+	if w != W || h != H {
+		t.Errorf("Wrong size, expected (%d, %d), was (%d, %d)\n", W, H, w, h)
+	}
+}
+
 func TestGetOutsideOfBoardReturnsEmpty(t *testing.T) {
-	var cases = []Pos {
+	var cases = []Pos{
 		Pos{-1, 0},
 		Pos{0, -1},
 		Pos{-1, -1},
