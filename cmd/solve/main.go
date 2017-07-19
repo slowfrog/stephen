@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/slowfrog/stephen/display"
-	"github.com/slowfrog/stephen/model"
+	"github.com/slowfrog/stephen/pkg/display"
+	"github.com/slowfrog/stephen/pkg/model"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -66,7 +66,7 @@ func main() {
 					fmt.Printf("WITH CTRL")
 				}
 			default:
-				fmt.Printf("Ev %v\n", t)
+				fmt.Printf("%#v\n", t)
 			}
 		}
 		sdl.Delay(5)
