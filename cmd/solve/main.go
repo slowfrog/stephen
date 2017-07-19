@@ -136,30 +136,3 @@ func renderSausage(ds *display.State, s *model.Sausage) {
 	rect := sdl.Rect{X: int32(s.X)*CW + OX + SOX, Y: int32(s.Y)*CH + OY + SOY, W: sw, H: sh}
 	ds.FillRect(&rect, TRANS_RED)
 }
-
-func renderFigure(ds *display.State, points []sdl.Point, dx *int32, dy *int32) {
-	points[2].X += *dx
-	points[2].Y += *dy
-
-	if points[2].X >= W {
-		*dx = -1
-	} else if points[2].X <= 0 {
-		*dx = 1
-	}
-	if points[2].Y >= H {
-		*dy = -1
-	} else if points[2].Y <= 0 {
-		*dy = 1
-	}
-
-	err := ds.DrawLines(points, YELLOW)
-	if err != nil {
-		panic(err)
-	}
-
-	r := sdl.Rect{points[2].X - 10, points[2].Y - 10, 20, 20}
-	err = ds.FillRect(&r, RED)
-	if err != nil {
-		panic(err)
-	}
-}
