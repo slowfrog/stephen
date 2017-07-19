@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -17,7 +18,7 @@ func TestSausageToString(t *testing.T) {
 	s := CreateSausage(HORIZONTAL, 5, 4)
 	s.Cook(1).Cook(3).Cook(3).Cook(3)
 	const exp string = "(5,4-horizontal-[.x][.#])"
-	str := s.ToString()
+	str := fmt.Sprintf("%v", s)
 
 	if str != exp {
 		t.Errorf("Wrong ToString, expected %s but was %s\n", exp, str)

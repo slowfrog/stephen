@@ -29,15 +29,21 @@ type Sausage struct {
 	Cooked [4]uint8
 }
 
+const (
+	UNCOOKED = "."
+	COOKED   = "x"
+	BURNT    = "#"
+)
+
 // Returns a 1-char string representing the cooking state of a sausage part
 func CookedStr(b uint8) string {
 	switch b {
 	case 0:
-		return "."
+		return UNCOOKED
 	case 1:
-		return "x"
+		return COOKED
 	default:
-		return "#"
+		return BURNT
 	}
 }
 
@@ -53,7 +59,7 @@ func (s *Sausage) Cook(which uint8) *Sausage {
 }
 
 // Returns a text representation of the sausage
-func (s *Sausage) ToString() string {
+func (s Sausage) String() string {
 	return fmt.Sprintf("(%d,%d-%s-[%s%s][%s%s])",
 		s.X, s.Y, s.Alignment.Name(),
 		CookedStr(s.Cooked[0]), CookedStr(s.Cooked[1]),
