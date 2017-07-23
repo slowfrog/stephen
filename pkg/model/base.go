@@ -1,29 +1,46 @@
 package model
 
 // Dir values represent the four axis-aligned directions.
-type Dir struct {
-	name string
-	dx   int8
-	dy   int8
-}
+type Dir byte
+
+const (
+	UP Dir = 0
+	RIGHT = 1
+	DOWN = 2
+	LEFT = 3
+)
 
 // Name returns the name of the direction.
 func (d Dir) Name() string {
-	return d.name
+	switch d {
+	case UP:
+		return "up"
+	case RIGHT:
+		return "right"
+	case DOWN:
+		return "down"
+	case LEFT:
+		return "left"
+	default:
+		return "WAT?"
+	}
 }
 
 // Offset returns the dx, dy offsets of the direction.
 func (d Dir) Offset() (dx, dy int8) {
-	return d.dx, d.dy
+	switch d {
+	case UP:
+		return 0, -1
+	case RIGHT:
+		return 1, 0
+	case DOWN:
+		return 0, 1
+	case LEFT:
+		return -1, 0
+	default:
+		return 0, 0
+	}
 }
-
-// The four predefined directions.
-var (
-	UP    Dir = Dir{name: "up", dx: 0, dy: -1}
-	LEFT  Dir = Dir{name: "left", dx: -1, dy: 0}
-	DOWN  Dir = Dir{name: "down", dx: 0, dy: 1}
-	RIGHT Dir = Dir{name: "right", dx: 1, dy: 0}
-)
 
 func TurnClockwise(d Dir) Dir {
 	switch d {

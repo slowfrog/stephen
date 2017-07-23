@@ -4,7 +4,7 @@ import "testing"
 
 func TestPredefinedDirs(t *testing.T) {
 	var cases = []struct {
-		d    dir
+		d    Dir
 		name string
 		dx   int8
 		dy   int8
@@ -29,7 +29,7 @@ func TestPredefinedDirs(t *testing.T) {
 func TestPosPlusDif(t *testing.T) {
 	p := Pos{X: 5, Y: 7}
 	var cases = []struct {
-		d   dir
+		d   Dir
 		exp Pos
 	}{
 		{UP, Pos{5, 6}},
