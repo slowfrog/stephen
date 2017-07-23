@@ -24,7 +24,9 @@ func main() {
 	s[0].Alignment = model.HORIZONTAL
 	s[1].X = 3
 	s[1].Y = 1
-	w := model.NewWorld(b, s)
+
+	st := model.Stephen{model.Pos{4, 2}, model.LEFT}
+	w := model.NewWorld(b, s, st)
 
 	/*err = sdl.Init(sdl.INIT_EVERYTHING)
 	if err != nil {
@@ -49,23 +51,40 @@ func main() {
 
 	running = true
 	for running {
-		ds.Clear(GRAY)
-		renderWorld(ds, w)
-		ds.Present()
+		moved := false
+		var d model.Dir
 		for event = sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 			switch event.(type) {
 			case *sdl.QuitEvent:
 				running = false
 			case *sdl.KeyDownEvent:
 				kev := event.(*sdl.KeyDownEvent)
-				if (*kev).Keysym.Sym == sdl.K_ESCAPE {
+				switch (*kev).Keysym.Sym {
+				case sdl.K_ESCAPE:
 					running = false
-				}
-				if sdl.GetModState()&sdl.KMOD_CTRL != 0 {
-					fmt.Printf("WITH CTRL")
+				case sdl.K_UP:
+					d = model.UP
+					moved = true
+				case sdl.K_DOWN:
+					d = model.DOWN
+					moved = true
+				case sdl.K_LEFT:
+					d = model.LEFT
+					moved = true
+				case sdl.K_RIGHT:
+					d = model.RIGHT
+					moved = true
 				}
 			}
 		}
+
+		if moved {
+			w.MoveStephen(d)
+		}
+
+		ds.Clear(GRAY)
+		renderWorld(ds, w)
+		ds.Present()
 		sdl.Delay(5)
 	}
 }
@@ -93,6 +112,7 @@ func renderWorld(ds *display.State, w *model.World) {
 	for _, s := range w.Sausages() {
 		renderSausage(ds, &s)
 	}
+	renderStephen(ds, w.Stephen())
 }
 
 func renderBoard(ds *display.State, b *model.Board) {
@@ -135,4 +155,49 @@ func renderSausage(ds *display.State, s *model.Sausage) {
 	}
 	rect := sdl.Rect{X: int32(s.X)*CW + OX + SOX, Y: int32(s.Y)*CH + OY + SOY, W: sw, H: sh}
 	ds.FillRect(&rect, TRANS_RED)
+}
+
+const (
+	STOX = 10
+	STOY = 10
+	STOIX = 20
+	STOIY = 20
+	STW  = CW - 2*STOX
+	STH  = CH - 2*STOY
+	STIW  = CW - 2*STOIX
+	STIH  = CH - 2*STOIY
+)
+
+func min(x, y int32) int32 {
+	if x < y {
+		return x
+	}
+	return y
+}
+
+func abs(x int32) int32 {
+	if x < 0 {
+		return -x
+	}
+	return x
+}
+
+func renderStephen(ds *display.State, s *model.Stephen) {
+	var rects [2]sdl.Rect
+	rects[0].X = int32(s.Pos.X) * CW + OX + STOX
+	rects[0].Y = int32(s.Pos.Y)*CH + OY + STOY
+	rects[0].W = STW
+	rects[0].H = STH
+	dx, dy := s.Dir.Offset()
+	minX := min(int32(s.Pos.X), int32(s.Pos.X + dx))
+	minY := min(int32(s.Pos.Y), int32(s.Pos.Y + dy))
+	adX := abs(int32(dx))
+	adY := abs(int32(dy))
+	
+	rects[1].X = int32(minX) * CW + OX + STOIX
+	rects[1].Y = int32(minY) * CH + OY + STOIY
+	rects[1].W = STIW + int32(adX * CW)
+	rects[1].H = STIH + int32(adY * CH)
+
+	ds.FillRects(rects[0:2], YELLOW)
 }
