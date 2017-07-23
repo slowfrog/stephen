@@ -4,10 +4,10 @@ package model
 type Dir byte
 
 const (
-	UP Dir = 0
-	RIGHT = 1
-	DOWN = 2
-	LEFT = 3
+	UP    Dir = 0
+	RIGHT     = 1
+	DOWN      = 2
+	LEFT      = 3
 )
 
 // Name returns the name of the direction.
@@ -26,62 +26,24 @@ func (d Dir) Name() string {
 	}
 }
 
+var dxOffset = [4]int8{0, 1, 0, -1}
+var dyOffset = [4]int8{-1, 0, 1, 0}
+
 // Offset returns the dx, dy offsets of the direction.
 func (d Dir) Offset() (dx, dy int8) {
-	switch d {
-	case UP:
-		return 0, -1
-	case RIGHT:
-		return 1, 0
-	case DOWN:
-		return 0, 1
-	case LEFT:
-		return -1, 0
-	default:
-		return 0, 0
-	}
+	return dxOffset[d], dyOffset[d]
 }
 
 func TurnClockwise(d Dir) Dir {
-	switch d {
-	case UP:
-		return RIGHT
-	case RIGHT:
-		return DOWN
-	case DOWN:
-		return LEFT
-	case LEFT:
-		return UP
-	}
-	return UP
+	return (d + 1) % 4
 }
 
 func TurnCounterClockwise(d Dir) Dir {
-	switch d {
-	case UP:
-		return LEFT
-	case LEFT:
-		return DOWN
-	case DOWN:
-		return RIGHT
-	case RIGHT:
-		return UP
-	}
-	return UP
+	return (d + 3) % 4
 }
 
 func Opposite(d Dir) Dir {
-	switch d {
-	case UP:
-		return DOWN
-	case LEFT:
-		return RIGHT
-	case DOWN:
-		return UP
-	case RIGHT:
-		return LEFT
-	}
-	return LEFT
+	return (d + 2) % 4
 }
 
 // Pos represent the coordinates of a cell on the board.

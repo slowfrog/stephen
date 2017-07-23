@@ -26,7 +26,7 @@ func TestPredefinedDirs(t *testing.T) {
 	}
 }
 
-func TestPosPlusDif(t *testing.T) {
+func TestPosPlusDir(t *testing.T) {
 	p := Pos{X: 5, Y: 7}
 	var cases = []struct {
 		d   Dir
@@ -43,6 +43,31 @@ func TestPosPlusDif(t *testing.T) {
 		if a.X != tt.exp.X || a.Y != tt.exp.Y {
 			t.Errorf("Wrong pos+%s, expected %d,%d, was %d,%d",
 				tt.d.Name(), tt.exp.X, tt.exp.Y, a.X, a.Y)
+		}
+	}
+}
+
+func TestTurnCW(t *testing.T) {
+	var cases = []struct {
+		from Dir
+		to   Dir
+	}{
+		{UP, RIGHT},
+		{RIGHT, DOWN},
+		{DOWN, LEFT},
+		{LEFT, UP},
+	}
+
+	for _, tt := range cases {
+		to := TurnClockwise(tt.from)
+		if to != tt.to {
+			t.Errorf("Wrong CW turn from %s, expected %s, got %s",
+				tt.from.Name(), tt.to.Name(), to.Name())
+		}
+		from := TurnCounterClockwise(tt.to)
+		if from != tt.from {
+			t.Errorf("Wrong CCW turn from %s, expected %s, got %s",
+				tt.to.Name(), tt.from.Name(), from.Name())
 		}
 	}
 }

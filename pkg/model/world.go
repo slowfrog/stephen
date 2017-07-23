@@ -29,4 +29,3 @@ func (w *World) Stephen() *Stephen {
 func (w *World) MoveStephen(d Dir) {
 	w.stephen.Move(d)
 }
-
