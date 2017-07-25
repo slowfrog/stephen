@@ -29,3 +29,10 @@ func (w *World) Stephen() *Stephen {
 func (w *World) MoveStephen(d Dir) {
 	w.stephen.Move(d)
 }
+
+func (w *World) GetMoves(d Dir) []entityMove {
+	stm := w.stephen.GetMove(d)
+	// Get provoked moves
+	// If sausage, get suasage provoked moves
+	return []entityMove{stm}
+}

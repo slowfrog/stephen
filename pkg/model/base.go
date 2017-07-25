@@ -35,15 +35,15 @@ func (d Dir) Offset() (dx, dy int8) {
 }
 
 func TurnClockwise(d Dir) Dir {
-	return (d + 1) % 4
+	return (d + 1) & 3
 }
 
 func TurnCounterClockwise(d Dir) Dir {
-	return (d + 3) % 4
+	return (d + 3) & 3
 }
 
 func Opposite(d Dir) Dir {
-	return (d + 2) % 4
+	return (d + 2) & 3
 }
 
 // Pos represent the coordinates of a cell on the board.
@@ -60,14 +60,26 @@ func (p Pos) Plus(d Dir) (q Pos) {
 	return
 }
 
-// moves defines possible character actions: rotations or change of position
-type move struct {
-	name string
+type Move byte
+
+const (
+	MOVE_UP               Move = 0
+	MOVE_RIGHT                 = 1
+	MOVE_DOWN                  = 2
+	MOVE_LEFT                  = 3
+	TURN_CLOCKWISE             = 4
+	TURN_COUNTERCLOCKWISE      = 5
+)
+
+func dirToMove(d Dir) Move {
+	return Move(d)
 }
 
-var (
-	FORWARD    move = move{name: "forward"}
-	BACKWARD   move = move{name: "backward"}
-	TURN_LEFT  move = move{name: "turn left"}
-	TURN_RIGHT move = move{name: "turn right"}
-)
+type Entity interface {
+	GetPos() Pos
+}
+
+type entityMove struct {
+	entity Entity
+	move   Move
+}

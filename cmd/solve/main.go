@@ -22,8 +22,8 @@ func main() {
 
 	s := make([]model.Sausage, 2)
 	s[0].Alignment = model.HORIZONTAL
-	s[1].X = 3
-	s[1].Y = 1
+	s[1].Pos.X = 3
+	s[1].Pos.Y = 1
 
 	st := model.Stephen{model.Pos{4, 2}, model.LEFT}
 	w := model.NewWorld(b, s, st)
@@ -153,7 +153,8 @@ func renderSausage(ds *display.State, s *model.Sausage) {
 	} else {
 		sw, sh = CW-SOX*2, (CH-SOY)*2
 	}
-	rect := sdl.Rect{X: int32(s.X)*CW + OX + SOX, Y: int32(s.Y)*CH + OY + SOY, W: sw, H: sh}
+	p := s.GetPos()
+	rect := sdl.Rect{X: int32(p.X)*CW + OX + SOX, Y: int32(p.Y)*CH + OY + SOY, W: sw, H: sh}
 	ds.FillRect(&rect, TRANS_RED)
 }
 

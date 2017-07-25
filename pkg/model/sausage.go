@@ -21,10 +21,7 @@ func (a alignment) Name() string {
 
 type Sausage struct {
 	Alignment alignment
-	// Left-most (min) x of the sausage
-	X int8
-	// Top-most (min) y of the sausage
-	Y int8
+	Pos Pos
 	// Baking count: X,Y-bottom, other-bottom, X,Y-top, other top
 	Cooked [4]uint8
 }
@@ -49,7 +46,11 @@ func CookedStr(b uint8) string {
 
 // Creates an uncooked sausage, with the given alignment and position
 func CreateSausage(a alignment, x, y int8) Sausage {
-	return Sausage{a, x, y, [4]uint8{0, 0, 0, 0}}
+	return Sausage{a, Pos{x, y}, [4]uint8{0, 0, 0, 0}}
+}
+
+func (s Sausage) GetPos() Pos {
+	return s.Pos
 }
 
 // Cook a part of the sausage
@@ -61,7 +62,7 @@ func (s *Sausage) Cook(which uint8) *Sausage {
 // Returns a text representation of the sausage
 func (s Sausage) String() string {
 	return fmt.Sprintf("(%d,%d-%s-[%s%s][%s%s])",
-		s.X, s.Y, s.Alignment.Name(),
+		s.Pos.X, s.Pos.Y, s.Alignment.Name(),
 		CookedStr(s.Cooked[0]), CookedStr(s.Cooked[1]),
 		CookedStr(s.Cooked[2]), CookedStr(s.Cooked[3]))
 }
